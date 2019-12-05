@@ -32,6 +32,9 @@ enum FileType {
     case xib
     case plist
     case pbxproj
+    case json
+    case js
+    case strings
     
     init?(ext: String) {
         switch ext {
@@ -40,6 +43,9 @@ enum FileType {
         case "xib", "storyboard": self = .xib
         case "plist": self = .plist
         case "pbxproj": self = .pbxproj
+        case "js": self = .js
+        case "json": self = .json
+        case "strings": self = .strings
         default: return nil
         }
     }
@@ -51,6 +57,9 @@ enum FileType {
         case .xib: return [XibImageSearchRule()]
         case .plist: return [PlistImageSearchRule(extensions: extensions)]
         case .pbxproj: return [PbxprojImageSearchRule(extensions: extensions)]
+        case .json: return [JSONImageSearchRule(extensions: extensions)]
+        case .js: return [JSImageSearchRule(extensions: extensions)]
+        case .strings: return [StringsImageSearchRule(extensions: extensions)]
         }
     }
 }
@@ -101,7 +110,7 @@ public struct FengNiao {
     let resourceExtensions: [String]
     let searchInFileExtensions: [String]
     
-    let regularDirExtensions = ["imageset", "launchimage", "appiconset", "stickersiconset", "complicationset", "bundle"]
+    let regularDirExtensions = Set(["imageset", "launchimage", "appiconset", "stickersiconset", "complicationset", "bundle"])
     var nonDirExtensions: [String] {
         return resourceExtensions.filter { !regularDirExtensions.contains($0) }
     }
@@ -219,6 +228,11 @@ public struct FengNiao {
         var result = [String]()
         for subPath in subPaths {
             if subPath.lastComponent.hasPrefix(".") {
+                continue
+            }
+            
+            if let extname = subPath.extension,
+                regularDirExtensions.contains(extname) {
                 continue
             }
             

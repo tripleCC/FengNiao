@@ -70,6 +70,21 @@ struct ObjCImageSearchRule: RegPatternSearchRule {
     let patterns = ["@\"(.*?)\"", "\"(.*?)\""]
 }
 
+struct JSONImageSearchRule: RegPatternSearchRule {
+    let extensions: [String]
+    let patterns = ["\"(.*?)\""]
+}
+
+struct JSImageSearchRule: RegPatternSearchRule {
+    let extensions: [String]
+    let patterns = ["\"(.*?)\""]
+}
+
+struct StringsImageSearchRule: RegPatternSearchRule {
+    let extensions: [String]
+    let patterns = ["\"(.*?)\""]
+}
+
 struct SwiftImageSearchRule: RegPatternSearchRule {
     let extensions: [String]
     let patterns = ["\"(.*?)\""]
