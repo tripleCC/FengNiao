@@ -58,6 +58,11 @@ let isForceOption = BoolOption(
     helpMessage: "Delete the found unused files without asking.")
 cli.addOption(isForceOption)
 
+let isListOption = BoolOption(
+    shortFlag: "l", longFlag: "list",
+    helpMessage: "List ununsed files.")
+cli.addOption(isListOption)
+
 let excludePathOption = MultiStringOption(
     shortFlag: "e", longFlag: "exclude",
     helpMessage: "Exclude paths from search.")
@@ -112,6 +117,7 @@ if versionOption.value {
 
 let projectPath = projectPathOption.value ?? "."
 let isForce = isForceOption.value
+let isList = isListOption.value
 let excludePaths = excludePathOption.value ?? []
 let resourceExtentions = resourceExtOption.value ?? ["imageset", "jpg", "png", "gif", "pdf"]
 let fileExtensions = fileExtOption.value ?? ["h", "m", "mm", "swift", "xib", "storyboard", "plist"]
@@ -162,6 +168,14 @@ if !isForce {
         print("Ignored. Nothing to do, bye!".green.bold)
         exit(EX_OK)
     }
+}
+
+if isList {
+    print(">==================================================")
+    for file in unusedFiles.sorted(by: { $0.size > $1.size }) {
+        print("\(file.readableSize) \(file.path.string)")
+    }
+    print(">==================================================")
 }
 
 print("Deleting unused files...⚙".bold)

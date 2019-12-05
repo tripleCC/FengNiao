@@ -61,7 +61,10 @@ class ExtensionFindProcess: NSObject {
             args.append("-not")
             args.append("-path")
             
-            if filePath.isDirectory {
+            if let extname = filePath.extension,
+                regularDirExtensions.contains(extname) {
+                args.append(filePath.string)
+            } else if filePath.isDirectory {
                 args.append("\(filePath.string)/*")
             } else {
                 args.append(filePath.string)

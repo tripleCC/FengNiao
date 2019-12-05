@@ -103,14 +103,15 @@ public enum FengNiaoError: Error {
     case noFileExtension
 }
 
+public let regularDirExtensions = Set(["imageset", "launchimage", "appiconset", "stickersiconset", "complicationset", "bundle"])
+
 public struct FengNiao {
 
     let projectPath: Path
-    let excludedPaths: [Path]
+    let excludedPaths: Set<Path>
     let resourceExtensions: [String]
     let searchInFileExtensions: [String]
-    
-    let regularDirExtensions = Set(["imageset", "launchimage", "appiconset", "stickersiconset", "complicationset", "bundle"])
+
     var nonDirExtensions: [String] {
         return resourceExtensions.filter { !regularDirExtensions.contains($0) }
     }
@@ -118,7 +119,7 @@ public struct FengNiao {
     public init(projectPath: String, excludedPaths: [String], resourceExtensions: [String], searchInFileExtensions: [String]) {
         let path = Path(projectPath).absolute()
         self.projectPath = path
-        self.excludedPaths = excludedPaths.map { path + Path($0) }
+        self.excludedPaths = Set(excludedPaths.map { path + Path($0) })
         self.resourceExtensions = resourceExtensions
         self.searchInFileExtensions = searchInFileExtensions
     }
@@ -183,7 +184,7 @@ public struct FengNiao {
     }
     
     func allResourceFiles() -> [String: Set<String>] {
-        let find = ExtensionFindProcess(path: projectPath, extensions: resourceExtensions, excluded: excludedPaths)
+        let find = ExtensionFindProcess(path: projectPath, extensions: resourceExtensions, excluded: Array(excludedPaths))
         guard let result = find?.execute() else {
             print("Resource finding failed.".red)
             return [:]
