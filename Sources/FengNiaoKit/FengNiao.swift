@@ -103,7 +103,9 @@ public enum FengNiaoError: Error {
     case noFileExtension
 }
 
-public let regularDirExtensions = Set(["imageset", "launchimage", "appiconset", "stickersiconset", "complicationset", "bundle"])
+private var excludeDirExtensions = Set(["imageset", "launchimage", "appiconset", "stickersiconset", "complicationset"])
+public let sourceExcludeDirExtensions = excludeDirExtensions
+public let regularDirExtensions = excludeDirExtensions.union(["bundle"])
 
 public struct FengNiao {
 
@@ -233,7 +235,7 @@ public struct FengNiao {
             }
             
             if let extname = subPath.extension,
-                regularDirExtensions.contains(extname) {
+                sourceExcludeDirExtensions.contains(extname) {
                 continue
             }
             
