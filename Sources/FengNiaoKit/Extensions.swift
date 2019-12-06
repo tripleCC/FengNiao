@@ -45,7 +45,7 @@ extension String {
             result = p.lastComponent
         }
         
-        if result.hasSuffix("@2x") || result.hasSuffix("@3x") {
+        if result.hasSuffix("@1x") || result.hasSuffix("@2x") || result.hasSuffix("@3x") {
             let endIndex = result.index(result.endIndex, offsetBy: -3)
             result = String(result[..<endIndex])
         }
